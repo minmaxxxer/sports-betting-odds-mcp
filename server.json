@@ -3,13 +3,20 @@
   "name": "dev.minmaxxxer/sports-betting-odds",
   "title": "Sports Betting Odds & Arbitrage",
   "description": "Betting odds data: closing lines of 390k games, Pinnacle odds and props, arbitrage and value bets",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://minmaxxxer.dev/mcp-reg",
+  "repository": {
+    "url": "https://github.com/minmaxxxer/sports-betting-odds-mcp",
+    "source": "github",
+    "id": "1462945135"
+  },
   "icons": [
     {
       "src": "https://api.minmaxxxer.dev/logo.png",
       "mimeType": "image/png",
-      "sizes": ["500x500"]
+      "sizes": [
+        "500x500"
+      ]
     }
   ],
   "remotes": [
