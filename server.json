@@ -1,0 +1,35 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "dev.minmaxxxer/sports-betting-odds",
+  "title": "Sports Betting Odds & Arbitrage",
+  "description": "Betting odds data: closing lines of 390k games, Pinnacle odds and props, arbitrage and value bets",
+  "version": "1.0.0",
+  "websiteUrl": "https://minmaxxxer.dev/mcp-reg",
+  "icons": [
+    {
+      "src": "https://api.minmaxxxer.dev/logo.png",
+      "mimeType": "image/png",
+      "sizes": ["500x500"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://sports-betting-odds-arbitrage-api.p.rapidapi.com/v1/mcp",
+      "headers": [
+        {
+          "name": "X-RapidAPI-Key",
+          "description": "Your RapidAPI key. Subscribe to the Sports Betting Odds & Arbitrage API on RapidAPI (free BASIC plan).",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "X-RapidAPI-Host",
+          "description": "RapidAPI host of the API",
+          "isRequired": true,
+          "value": "sports-betting-odds-arbitrage-api.p.rapidapi.com"
+        }
+      ]
+    }
+  ]
+}
