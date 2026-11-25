@@ -12,7 +12,8 @@ import os
 import urllib.request
 
 HOST = "sports-betting-odds-arbitrage-api.p.rapidapi.com"
-URL = f"https://{HOST}/v1/mcp"
+# Our own address; the same server also answers on RapidAPI: MCP_URL=https://sports-betting-odds-arbitrage-api.p.rapidapi.com/v1/mcp
+URL = os.environ.get("MCP_URL", "https://api.minmaxxxer.dev/mcp")
 
 
 def rpc(method, params=None, msg_id=1, url=URL, headers=None):

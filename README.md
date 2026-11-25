@@ -1,11 +1,20 @@
 # Sports Betting Odds MCP Server
 
+[![Sports Betting Odds & Arbitrage MCP connector](https://glama.ai/mcp/connectors/dev.minmaxxxer/sports-betting-odds/badges/score.svg)](https://glama.ai/mcp/connectors/dev.minmaxxxer/sports-betting-odds)
+
 An MCP server with sports betting odds data for Claude, Cursor, VS Code and any other MCP client:
 - closing lines of **390,000+ past games** with every bet already graded;
-- **Pinnacle's current lines** and **player props**;
+- **Pinnacle's current lines**, in-play included, and **player props**;
 - **arbitrage** and **value bets** on the coming games.
 
-It is a remote server (Streamable HTTP, stateless JSON) served through RapidAPI, so all you need is a RapidAPI key. The BASIC plan is free.
+It is a remote server (Streamable HTTP, stateless JSON). Data is sold through RapidAPI, so all you need is a RapidAPI key. The BASIC plan is free.
+
+```
+https://api.minmaxxxer.dev/mcp
+header: X-RapidAPI-Key: <your key>
+```
+
+Listing the tools needs no key and costs nothing. Each tool call goes to RapidAPI with your key and counts as one request of your plan. The same server also answers directly on RapidAPI:
 
 ```
 https://sports-betting-odds-arbitrage-api.p.rapidapi.com/v1/mcp
@@ -43,39 +52,39 @@ Each tool runs the REST endpoint of the same name. Answers, plan limits and erro
 | `get_player_props` | Pinnacle player props now: line, odds, no-vig probability, opening line. |
 | `get_player_props_history` | Graded props of a past day: closing line, result, the player's actual stat. |
 | `list_teams` | Teams of a league with their IDs. |
+| `list_bookmakers` | The bookmakers behind a league's odds. |
+| `get_game` | One game by ID with every bookmaker's odds. |
 
 ## Connect
 
 **Claude Code**
 
 ```bash
-claude mcp add --transport http sports-odds https://sports-betting-odds-arbitrage-api.p.rapidapi.com/v1/mcp \
-  --header "X-RapidAPI-Key: YOUR_KEY" --header "X-RapidAPI-Host: sports-betting-odds-arbitrage-api.p.rapidapi.com"
+claude mcp add --transport http sports-odds https://api.minmaxxxer.dev/mcp --header "X-RapidAPI-Key: YOUR_KEY"
 ```
 
 **Cursor** (`~/.cursor/mcp.json`)
 
 ```json
 {"mcpServers": {"sports-odds": {
-  "url": "https://sports-betting-odds-arbitrage-api.p.rapidapi.com/v1/mcp",
-  "headers": {"X-RapidAPI-Key": "YOUR_KEY", "X-RapidAPI-Host": "sports-betting-odds-arbitrage-api.p.rapidapi.com"}}}}
+  "url": "https://api.minmaxxxer.dev/mcp",
+  "headers": {"X-RapidAPI-Key": "YOUR_KEY"}}}}
 ```
 
 **VS Code** (`.vscode/mcp.json`)
 
 ```json
 {"servers": {"sports-odds": {"type": "http",
-  "url": "https://sports-betting-odds-arbitrage-api.p.rapidapi.com/v1/mcp",
-  "headers": {"X-RapidAPI-Key": "YOUR_KEY", "X-RapidAPI-Host": "sports-betting-odds-arbitrage-api.p.rapidapi.com"}}}}
+  "url": "https://api.minmaxxxer.dev/mcp",
+  "headers": {"X-RapidAPI-Key": "YOUR_KEY"}}}}
 ```
 
 **Claude Desktop** and other clients without custom headers, through the [`mcp-remote`](https://www.npmjs.com/package/mcp-remote) bridge:
 
 ```json
 {"mcpServers": {"sports-odds": {"command": "npx", "args": ["-y", "mcp-remote",
-  "https://sports-betting-odds-arbitrage-api.p.rapidapi.com/v1/mcp",
-  "--header", "X-RapidAPI-Key:${RAPIDAPI_KEY}",
-  "--header", "X-RapidAPI-Host:sports-betting-odds-arbitrage-api.p.rapidapi.com"],
+  "https://api.minmaxxxer.dev/mcp",
+  "--header", "X-RapidAPI-Key:${RAPIDAPI_KEY}"],
   "env": {"RAPIDAPI_KEY": "YOUR_KEY"}}}}
 ```
 
@@ -95,7 +104,7 @@ python examples/check_mcp.py
 - **Leagues:** NBA, NFL, MLB, NHL, ATP and WTA tennis, and 32 soccer leagues (Premier League, LaLiga, Serie A, Bundesliga, Ligue 1, Champions League, MLS and more).
 - **History:** soccer since 2005; US leagues and tennis since 2009. About 25 bookmakers per game in current seasons.
 - **Pinnacle:** lines recorded every 2 minutes since 22 Oct 2026. Player props for NBA, NFL, NHL, NCAAF, WNBA and MLB.
-- **Pre-match only:** no in-play prices.
+- **In-play:** Pinnacle only (`get_pinnacle_odds` with `live="true"`), re-read about every 2 minutes; the other bookmakers are pre-match.
 - **Analysis only:** the data is for analysis and the server takes no bets. Prices move, so confirm them at the bookmaker.
 
 ## Protocol
@@ -104,7 +113,7 @@ MCP Streamable HTTP without SSE or sessions:
 - one JSON-RPC 2.0 message per POST, answered with `application/json`;
 - notifications get `202 Accepted`;
 - `GET` answers `405`;
-- protocol versions `2025-06-18`, `2025-03-26` and `2024-11-05`.
+- protocol versions `2026-07-28`, `2025-11-25`, `2025-06-18`, `2025-03-26` and `2024-11-05`.
 
 `server.json` is the entry for the [official MCP Registry](https://registry.modelcontextprotocol.io).
 
